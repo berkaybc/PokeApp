@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, Image, SafeAreaView } from 'react-native';
+import { View, Text, Button, Image, SafeAreaView, Dimensions, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, NavigationProp, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../routeParams';
@@ -12,12 +12,50 @@ interface CardDetails {
     abilities: [{ name: string; text: string }];
     images: { large: string };
 }
-
 type PokemonCardDetailRouteProp = RouteProp<RootStackParamList, 'PokemonCardDetail'>;
-
 interface PokemonCardDetailProps {
     route: PokemonCardDetailRouteProp;
 }
+
+const { width } = Dimensions.get('window');
+
+const styles = StyleSheet.create({
+    backButton: {
+        justifyContent: "flex-start",
+        alignItems: "flex-start",
+        fontSize: 24
+    },
+    container: {
+        flex: 1,
+        padding: 20,
+    },
+    contentContainer: {
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+    },
+    image: {
+        width: width * 0.45,
+        height: width * 0.6,
+        resizeMode: 'contain',
+    },
+    text: {
+        fontSize: width < 768 ? 18 : 24,
+        marginVertical: 10,
+    },
+    button: {
+        marginTop: 20,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    abilitiesContainer: {
+        justifyContent: "center",
+        alignItems: "center",
+        marginHorizontal: 20,
+    },
+});
 
 const PokemonCardDetail: React.FC<PokemonCardDetailProps> = ({ route }) => {
     const navigation = useNavigation();
@@ -55,25 +93,32 @@ const PokemonCardDetail: React.FC<PokemonCardDetailProps> = ({ route }) => {
         fetchCardDetails();
     }, [cardId]);
 
-    if (!card) return <Text>Loading...</Text>;
+    if (!card) return <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" />
+    </View>;
     return (
-        <SafeAreaView>
-            <Button title="Back" onPress={() => navigation.goBack()} />
-            <View>
-                <Image source={{ uri: card.images.large }} style={{ width: 200, height: 280 }} />
-                <Text>Name: {card.name}</Text>
-                <Text>Type: {card.types.join(', ')}</Text>
-                <Text>HP: {card.hp}</Text>
-                {card.abilities && (
-                    <View>
-                        <Text>Abilities:</Text>
-                        {card.abilities.map((ability, index) => (
-                            <Text key={index}>{ability.name}: {ability.text}</Text>
-                        ))}
+        <SafeAreaView style={styles.container}>
+            <ScrollView>
+                <View style={styles.backButton}>
+                    <Button title="Back" onPress={() => navigation.goBack()} />
+                </View>
+                <View style={styles.contentContainer}>
+                    <Image source={{ uri: card.images.large }} style={styles.image} />
+                    <Text style={styles.text}>Name: {card.name}</Text>
+                    <Text style={styles.text}>Type: {card.types.join(', ')}</Text>
+                    <Text style={styles.text}>HP: {card.hp}</Text>
+                    {card.abilities && (
+                        <View style={styles.abilitiesContainer} >
+                            {card.abilities.map((ability, index) => (
+                                <Text key={index} style={styles.text}>{ability.name}: {ability.text}</Text>
+                            ))}
+                        </View>
+                    )}
+                    <View style={styles.button}>
+                        <Button title={isSaved ? 'Remove Card' : 'Save Card'} onPress={toggleSaveCard} />
                     </View>
-                )}
-                <Button title={isSaved ? 'Remove Card' : 'Save Card'} onPress={toggleSaveCard} />
-            </View>
+                </View>
+            </ScrollView>
         </SafeAreaView>
     );
 };

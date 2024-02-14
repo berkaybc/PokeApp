@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Image, SafeAreaView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../routeParams';
+import PokeInfoCard from '../components/PokeInfoCard';
 
 interface Card {
     id: string;
@@ -39,14 +40,16 @@ const PokemonCardsList = () => {
             <FlatList
                 data={cards}
                 renderItem={({ item }) => (
-                    <TouchableOpacity onPress={() => navigation.navigate('PokemonCardDetail', { cardId: item.id })}>
-                        <View>
-                            <Image source={{ uri: item.images.small }} style={{ width: 200, height: 200 }} />
-                            <Text style={{ fontSize: 24 }}>{item.name}</Text>
-                        </View>
-                    </TouchableOpacity>
+                    <PokeInfoCard
+                        id={item.id}
+                        name={item.name}
+                        imageUrl={item.images.small}
+                        onPress={() => navigation.navigate('PokemonCardDetail', { cardId: item.id })}
+                    />
                 )}
                 keyExtractor={(item) => item.id}
+                numColumns={2}
+                key={"two-columns"}
                 onEndReached={fetchCards}
                 onEndReachedThreshold={0.5}
                 ListFooterComponent={loading ? <ActivityIndicator size="large" /> : null}
