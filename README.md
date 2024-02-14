@@ -1,3 +1,22 @@
+## For Quick Installation & Build
+
+First, you will need to start install the necessary dependecies using npm.
+
+```bash
+# using npm
+npm i
+```
+
+Then you can start the ios and android simulators by running the following commands.
+
+```bash
+# ios
+npm run ios
+
+# ios
+npm run android
+```
+
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started
