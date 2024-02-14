@@ -11,6 +11,11 @@ Then you can start the ios and android simulators by running the following comma
 
 ```bash
 # ios
+# install pods
+cd ios
+pod install
+cd..
+# to build the project on a ios simulator
 npm run ios
 
 # ios
