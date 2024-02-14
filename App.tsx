@@ -10,10 +10,12 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
+import { RootStackParamList } from './routeParams';
+
 import PokemonCardsList from './screens/PokemonCardsList';
 import PokemonCardDetail from './screens/PokemonCardDetail';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';

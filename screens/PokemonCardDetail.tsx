@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, Image, SafeAreaView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationProp, RouteProp } from '@react-navigation/native';
+import { RootStackParamList } from '../routeParams';
 
 interface CardDetails {
     id: string;
@@ -12,7 +13,13 @@ interface CardDetails {
     images: { large: string };
 }
 
-const PokemonCardDetail = ({ route }) => {
+type PokemonCardDetailRouteProp = RouteProp<RootStackParamList, 'PokemonCardDetail'>;
+
+interface PokemonCardDetailProps {
+    route: PokemonCardDetailRouteProp;
+}
+
+const PokemonCardDetail: React.FC<PokemonCardDetailProps> = ({ route }) => {
     const navigation = useNavigation();
     const { cardId } = route.params;
     const [card, setCard] = useState<CardDetails | null>(null);
@@ -36,7 +43,9 @@ const PokemonCardDetail = ({ route }) => {
         if (isSaved) {
             newSavedCards = newSavedCards.filter((savedCardId) => savedCardId !== card?.id);
         } else {
-            newSavedCards.push(card?.id);
+            if (card?.id) {
+                newSavedCards.push(card?.id);
+            }
         }
         await AsyncStorage.setItem('savedCards', newSavedCards.join(','));
         setIsSaved(!isSaved);

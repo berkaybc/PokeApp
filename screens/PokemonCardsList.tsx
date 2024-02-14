@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Image, SafeAreaView, ActivityIndicator, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { RootStackParamList } from '../routeParams';
 
 interface Card {
     id: string;
@@ -12,7 +13,7 @@ const PokemonCardsList = () => {
     const [cards, setCards] = useState<Card[]>([]);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
-    const navigation = useNavigation();
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
     const fetchCards = async () => {
         if (loading) return;
